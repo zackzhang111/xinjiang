@@ -1,0 +1,41 @@
+.my-table {
+  //---
+  border: none;
+  // border: 1px solid #048fce;
+
+  :deep(.my-table-header) {
+    color: white;
+    background: transparent !important;
+    border-color: #048fce !important;
+
+    //---
+    border-top: 3px solid#048fce !important;
+
+    &:nth-child(1) {
+      border-left: 3px solid#048fce !important;
+    }
+    &:nth-last-child(1) {
+      border-right: 3px solid#048fce !important;
+    }
+  }
+  :deep(.my-table-cell) {
+    color: white;
+    background: transparent !important;
+    border-color: #048fce !important;
+    //-------
+    &:nth-child(1) {
+      border-left: 3px solid#048fce !important;
+    }
+    &:nth-last-child(1) {
+      border-right: 3px solid#048fce !important;
+    }
+  }
+  //---------
+  :deep(.my-table-row) {
+    &:nth-last-child(1) {
+      .my-table-cell {
+        border-bottom: 3px solid #048fce !important;
+      }
+    }
+  }
+}
