@@ -140,24 +140,37 @@ function upload(item: any) {}
           <el-button>删除</el-button>
         </div>
       </div>
-      <div class="flex-start" style="align-items: stretch;">
+      <div class="flex-start" style="align-items: stretch">
         <div class="equipment-image-container">
           <span>装备图片:</span>
           <div class="imgs-container">
             <!-- <img class="equipment-image-main equipment-image-active equipment-image" /> -->
             <div
-              v-for="item,index in state.equipmentInfo.imgs"
+              v-for="(item, index) in state.equipmentInfo.imgs"
               :key="index"
               class="img-container"
-              :class="{'equipment-image-main':item.IsPrimary==1,'equipment-image-active':item.isActive,'equipment-image':true,'equipment-image-null':item.justFillImg}"
+              :class="{
+                'equipment-image-main': item.IsPrimary == 1,
+                'equipment-image-active': item.isActive,
+                'equipment-image': true,
+                'equipment-image-null': item.justFillImg,
+              }"
             >
               <div
                 class="upload-div"
-                @click="state.equipmentInfo.imgs.forEach(e => e.isActive = false); item.isActive = true;"
+                @click="
+                  state.equipmentInfo.imgs.forEach((e) => (e.isActive = false));
+                  item.isActive = true;
+                "
               >
                 <span @click="upload">上传</span>
               </div>
-              <img :src="item.justFillImg?'':('data:image/png;base64,'+item.MT)" alt="请上传" />
+              <img
+                :src="
+                  item.justFillImg ? '' : 'data:image/png;base64,' + item.MT
+                "
+                alt="请上传"
+              />
             </div>
           </div>
         </div>
