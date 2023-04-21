@@ -1,5 +1,49 @@
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
+import { QuillEditor, Delta, Quill } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+let index = -1;
+const myEditor = ref(null);
+const content = ref<Delta>(
+  new Delta([
+    { insert: "一、“单位名称”单位" },
+    { insert: "\n" },
+    { insert: "1.基本情况", attributes: { color: "#ccc", bold: true } },
+    { insert: "\n" },
+    {
+      insert:
+        "“单位名称”基本部署于“单位地址”，BD代号“BD代号”，“单位级别）”级，下辖“单位类别数”个（“单位简称”）；“编制人员XXX人（其中军官XXX人、士官XXX人、义务兵XXX人、文职人员XXX人”，“现有人员XXX人（其中军官XXX人、士官XXX人、义务兵XXX人、文职人员XXX人”。",
+      attributes: { color: "#ccc", bold: true },
+    },
+    { insert: "\n" },
+    { insert: "2.担负任务" },
+    { insert: "\n" },
+    { insert: "1）“任务类型：任务名称”（例如：XXX：1.AAA；2.AAA）。" },
+    { insert: "\n" },
+    { insert: "3.主要装备" },
+    { insert: "\n" },
+    { insert: "”装备类型（编制数，现有数）“。" },
+    { insert: "\n" },
+    { insert: "4.主要领导" },
+    { insert: "\n" },
+    {
+      insert:
+        "“主官职务：姓名J衔，出生日期，民族，地址，入伍时间”。 政治委员：姓名J衔，出生日期，民族，地址，入伍时间”。",
+    },
+  ])
+);
+let options = {
+  modules: {
+    toolbar: [
+      { list: "ordered" },
+      { list: "bullet" },
+      { align: [] },
+      { color: [] },
+    ],
+  },
+  placeholder: "",
+  theme: "snow",
+};
 const detailData = reactive([
   {
     type: "1.基本情况",
@@ -65,6 +109,21 @@ const detailData = reactive([
     ],
   },
 ]);
+
+function handleClick(item: any) {
+  console.log(item);
+  myEditor.value.getQuill().insertText(index, item.title, { color: "red" });
+  index += item.title.length;
+}
+function selectionChange(item: any) {
+  if (!item.range) {
+    index = item.oldRange.index;
+  }
+}
+
+function ready() {
+  index = myEditor.value.getText().length - 1;
+}
 </script>
 
 <template>
@@ -73,19 +132,27 @@ const detailData = reactive([
       <div class="section" v-for="(sect, index) in detailData" :key="index">
         <h3 class="type">{{ sect.type }}</h3>
         <div class="contain-box">
-          <span
+          <div
             v-for="(item, ind) in sect.contain"
             :key="ind"
             class="contain"
             :class="{ 'no-padding': item.noPadding }"
-            >{{ item.title }}</span
           >
+            <span @click="handleClick(item)">{{ item.title }}</span>
+          </div>
         </div>
       </div>
       <div class="insert">插入</div>
     </div>
     <div class="template">
-      <h3 class="title">一、“单位名称”单位</h3>
+      <quill-editor
+        ref="myEditor"
+        :content="content"
+        :options="options"
+        @selectionChange="selectionChange"
+        @ready="ready"
+      ></quill-editor>
+      <!-- <h3 class="title">一、“单位名称”单位</h3>
       <p>1.基本情况</p>
       <p>
         &emsp;&emsp;“单位名称”基本部署于“单位地址”，BD代号“BD代号”，“单位级别）”级，下辖“单位类别数”个（“单位简称”）；“编制人员XXX人（其中军官XXX人、士官XXX人、义务兵XXX人、文职人员XXX人”，“现有人员XXX人（其中军官XXX人、士官XXX人、义务兵XXX人、文职人员XXX人”。
@@ -98,7 +165,7 @@ const detailData = reactive([
       <p>
         &emsp;&emsp;“主官职务：姓名J衔，出生日期，民族，地址，入伍时间”。<br />&emsp;&emsp;“
         政治委员：姓名J衔，出生日期，民族，地址，入伍时间”。
-      </p>
+      </p> -->
     </div>
   </div>
 </template>
@@ -138,6 +205,7 @@ const detailData = reactive([
           height: 38px;
           line-height: 38px;
           border-radius: 5px;
+          cursor: pointer;
           &.no-padding {
             padding: 0 5px;
           }
