@@ -7,6 +7,7 @@ import img_flag from "@/assets/flag.svg";
 import img_leaf from "@/assets/leaf.svg";
 // import img_expand from "@/components/icons/expand2.vue";
 import { infoStore } from "@/stores/treeTab.ts";
+import exportDialog from "../exportDialog/exportDialog.vue";
 // console.log(data);
 // defineProps<{ msg: string }>();
 
@@ -22,6 +23,14 @@ const state = reactive({
   data: [data],
   // data: [],
 });
+let dialog = ref<InstanceType<typeof exportDialog> | null>(null);
+const open = (): void => {
+  dialog.value?.openDia();
+};
+const confirmDia = (val: string): void => {
+  console.log(val);
+  dialog.value?.closeDia();
+};
 
 onMounted(() => {
   // 测试连接信息，接受命令处理结果
@@ -68,8 +77,9 @@ onMounted(() => {
 <template>
   <!-- :indent="0" -->
   <div class="layer-box">
-    <el-tree class="my-tree"
-    el-tree
+    <el-tree
+      class="my-tree"
+      el-tree
       :data="state.data"
       :props="defaultProps"
       :indent="0"
@@ -77,7 +87,11 @@ onMounted(() => {
     >
       <template #default="{ node, data }">
         <span class="custom-tree-node">
-          <img v-if="data.children.length>0" :src="img_file" class="img-file" />
+          <img
+            v-if="data.children.length > 0"
+            :src="img_file"
+            class="img-file"
+          />
           <img v-else :src="img_leaf" class="img-leaf" />
           <span>{{ node.label }}</span>
           <img :src="img_flag" class="img-flag" />
@@ -85,9 +99,11 @@ onMounted(() => {
       </template>
     </el-tree>
     <div class="export">
-      <div class="to-this-level">导出本级</div>
-      <div class="to-next-level">导出下级</div>
+      <!-- <div class="to-this-level">导出本级</div>
+      <div class="to-next-level">导出下级</div> -->
+      <el-button type="primary" @click="open">导出</el-button>
     </div>
+    <exportDialog ref="dialog" @confirmDia="confirmDia"></exportDialog>
   </div>
 </template>
 
@@ -256,27 +272,26 @@ onMounted(() => {
   color: #888;
 }
 .export {
-  margin-left: 100px;
-  margin-top: 40px;
   display: flex;
+  justify-content: center;
   font-size: 14px;
   color: #fff;
-  .to-this-level {
-    margin-right: 10px;
-    width: 80px;
-    height: 38px;
-    background-color: rgb(64, 158, 255);
-    border-radius: 5px;
-    line-height: 38px;
-    text-align: center;
-  }
-  .to-next-level {
-    width: 80px;
-    height: 38px;
-    background-color: rgb(64, 158, 255);
-    border-radius: 5px;
-    line-height: 38px;
-    text-align: center;
-  }
+  // .to-this-level {
+  //   margin-right: 10px;
+  //   width: 80px;
+  //   height: 38px;
+  //   background-color: rgb(64, 158, 255);
+  //   border-radius: 5px;
+  //   line-height: 38px;
+  //   text-align: center;
+  // }
+  // .to-next-level {
+  //   width: 80px;
+  //   height: 38px;
+  //   background-color: rgb(64, 158, 255);
+  //   border-radius: 5px;
+  //   line-height: 38px;
+  //   text-align: center;
+  // }
 }
 </style>
