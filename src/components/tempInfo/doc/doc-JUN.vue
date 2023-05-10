@@ -4,13 +4,13 @@ import flip from '../../common/flip.vue'
 
 </script>
 <template>
-	<div class="doc">
+	<div class="doc-JUN">
 		<CombinedDoc></CombinedDoc>
 		<flip class="flip"></flip>
 	</div>
 </template>
 <style scoped lang="less">
-	.doc {
+	.doc-JUN {
 		position: relative;
 		color: #fff;
 		.flip {

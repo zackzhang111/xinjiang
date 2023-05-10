@@ -1,10 +1,21 @@
+<script setup  lang="ts">
+import CombinedDoc from '../../common/combinedDoc.vue';
+import flip from '../../common/flip.vue';
+</script>
 <template>
-	<div class="doc">
-		综合文档-副JUN
-	</div>
+  <div class="doc-c-JUN">
+    <CombinedDoc></CombinedDoc>
+    <flip class="flip"></flip>
+  </div>
 </template>
 <style scoped lang="less">
-	.doc {
-		color: #fff;
-	}
+.doc-c-JUN {
+  position: relative;
+  color: #fff;
+  .flip {
+    position: absolute;
+    right: 90px;
+    bottom: 0;
+  }
+}
 </style>
