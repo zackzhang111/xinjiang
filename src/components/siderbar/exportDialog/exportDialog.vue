@@ -1,64 +1,64 @@
 <script setup lang="ts">
-import { ref, defineEmits, defineExpose } from "vue";
-import type { TabsPaneContext } from "element-plus";
-import cat1 from "@/assets/cat1.png";
-import cat2 from "@/assets/cat2.png";
+import { ref, defineEmits, defineExpose } from 'vue';
+import type { TabsPaneContext } from 'element-plus';
+import cat1 from '@/assets/cat1.png';
+import cat2 from '@/assets/cat2.png';
 
-const emit = defineEmits(["confirmDia"]);
+const emit = defineEmits(['confirmDia']);
 let showDia = ref<boolean>(false);
-let activeName = ref("first");
+let activeName = ref('first');
 let titleCheck = ref(false);
 let catalogCheck = ref(false);
 let levelsCheck = ref(false);
-let titleInput = ref("");
-let dateInput = ref("");
-let catalogInput = ref("");
-let catalogInitInput = ref("");
-let levelsInput = ref("");
-let personStatusCheck = ref("");
-let equipStatusCheck = ref("");
-let tableCheck = ref("");
+let titleInput = ref('');
+let dateInput = ref('');
+let catalogInput = ref('');
+let catalogInitInput = ref('');
+let levelsInput = ref('');
+let personStatusCheck = ref('');
+let equipStatusCheck = ref('');
+let tableCheck = ref('');
 
 const catalogOptions = [
   {
-    value: "label1",
-    label: "编目1",
+    value: 'label1',
+    label: '编目1',
   },
   {
-    value: "label2",
-    label: "编目2",
+    value: 'label2',
+    label: '编目2',
   },
   {
-    value: "label3",
-    label: "编目3",
+    value: 'label3',
+    label: '编目3',
   },
 ];
 const levelsOptions = [
   {
-    value: "currLevel",
-    label: "本级导出",
+    value: 'currLevel',
+    label: '本级导出',
   },
 ];
 const tableData = [
   {
-    N: "2016-05-03",
-    equip: "Tom",
-    ifEquip: "是",
+    N: '2016-05-03',
+    equip: 'Tom',
+    ifEquip: '是',
   },
   {
-    N: "2016-05-02",
-    equip: "Tom",
-    ifEquip: "是",
+    N: '2016-05-02',
+    equip: 'Tom',
+    ifEquip: '是',
   },
   {
-    N: "2016-05-04",
-    equip: "Tom",
-    ifEquip: "否",
+    N: '2016-05-04',
+    equip: 'Tom',
+    ifEquip: '否',
   },
   {
-    N: "2016-05-01",
-    equip: "Tom",
-    ifEquip: "否",
+    N: '2016-05-01',
+    equip: 'Tom',
+    ifEquip: '否',
   },
 ];
 
@@ -75,7 +75,7 @@ const closeDia = (): void => {
 };
 
 const confirmDia = (): void => {
-  emit("confirmDia", "弹窗内容事件处理完毕，信息传给父组件。");
+  emit('confirmDia', '弹窗内容事件处理完毕，信息传给父组件。');
 };
 // vue3中规定，使用了 <script setup> 的组件是默认私有的：
 // 一个父组件无法访问到一个使用了 <script setup> 的子组件中的任何东西，除非子组件在其中通过 defineExpose 宏显式暴露
@@ -117,11 +117,7 @@ defineExpose({
               "
             >
               <div style="width: 88px">日期：</div>
-              <el-date-picker
-                style="width: 450px"
-                v-model="dateInput"
-                type="date"
-              />
+              <el-date-picker style="width: 450px" v-model="dateInput" type="date" />
             </div>
           </div>
           <div style="margin: 0 10px">
@@ -143,8 +139,12 @@ defineExpose({
                   align-items: center;
                 "
               >
-                <div><img :src="cat1" alt="" /></div>
-                <div><img :src="cat2" alt="" /></div>
+                <div style="width:140px;">
+                  <img style="width:100%;" :src="cat1" alt />
+                </div>
+                <div style="width:140px;">
+                  <img style="width:100%;" :src="cat2" alt />
+                </div>
               </div>
             </div>
             <div
@@ -192,25 +192,13 @@ defineExpose({
         <div>
           <div style="margin: 0 10px">
             <div>
-              <el-checkbox
-                v-model="personStatusCheck"
-                label="人员统计"
-                size="large"
-              />
+              <el-checkbox v-model="personStatusCheck" label="人员统计" size="large" />
             </div>
             <div>
-              <el-checkbox
-                v-model="equipStatusCheck"
-                label="根据单位统计装备类型"
-                size="large"
-              />
+              <el-checkbox v-model="equipStatusCheck" label="根据单位统计装备类型" size="large" />
             </div>
             <div>
-              <el-checkbox
-                v-model="tableCheck"
-                label="根据装备类型统计单位表配置"
-                size="large"
-              />
+              <el-checkbox v-model="tableCheck" label="根据装备类型统计单位表配置" size="large" />
             </div>
           </div>
           <el-table :data="tableData" style="width: 100%">
