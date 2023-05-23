@@ -1,3 +1,3 @@
 window.dataManager = {
-  WebSocketUrl: "ws://192.168.2.88:54321",
+  WebSocketUrl: "ws://192.168.2.82:54321",
 };

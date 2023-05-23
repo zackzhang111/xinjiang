@@ -1,7 +1,7 @@
 import { QWebChannel } from "./qWebChannel.js";
 let qtClient;
-new Promise((resolve, reject) => {
-  var baseUrl = window.dataManager.WebSocketUrl;
+await new Promise((resolve, reject) => {
+   var baseUrl = window.dataManager.WebSocketUrl;
   // var baseUrl = "http://localhost:54321";
   var socket = new WebSocket(baseUrl);
   socket.onclose = function () {

@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref, defineEmits, defineExpose } from 'vue';
+import { ref, reactive, defineEmits, defineExpose, onMounted } from 'vue';
 import type { TabsPaneContext } from 'element-plus';
+import { ElMessage } from 'element-plus';
+import qtClient from '@/qt.ts';
 import cat1 from '@/assets/cat1.png';
 import cat2 from '@/assets/cat2.png';
 
@@ -15,9 +17,10 @@ let dateInput = ref('');
 let catalogInput = ref('');
 let catalogInitInput = ref('');
 let levelsInput = ref('');
-let personStatusCheck = ref('');
-let equipStatusCheck = ref('');
-let tableCheck = ref('');
+let statusChecker = ref('');
+// let personStatusCheck = ref('');
+// let equipStatusCheck = ref('');
+// let tableCheck = ref('');
 
 const catalogOptions = [
   {
@@ -39,28 +42,9 @@ const levelsOptions = [
     label: '本级导出',
   },
 ];
-const tableData = [
-  {
-    N: '2016-05-03',
-    equip: 'Tom',
-    ifEquip: '是',
-  },
-  {
-    N: '2016-05-02',
-    equip: 'Tom',
-    ifEquip: '是',
-  },
-  {
-    N: '2016-05-04',
-    equip: 'Tom',
-    ifEquip: '否',
-  },
-  {
-    N: '2016-05-01',
-    equip: 'Tom',
-    ifEquip: '否',
-  },
-];
+const state = reactive({ tableData: [] });
+const statsTable = reactive({ tableData: [] });
+
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event);
@@ -75,8 +59,85 @@ const closeDia = (): void => {
 };
 
 const confirmDia = (): void => {
-  emit('confirmDia', '弹窗内容事件处理完毕，信息传给父组件。');
+  // qtClient.exportWord('711200013');
+  console.log(activeName.value);
+  if (activeName.value == 'first') {
+    confirmDocs();
+  } else {
+    confirmStats();
+  }
 };
+
+const confirmDocs = (): void => {
+  alert(1);
+  // emit('confirmDia', '弹窗内容事件处理完毕，信息传给父组件。');
+};
+const confirmStats = (): void => {
+  // console.log(statusChecker.value);
+  if (statusChecker.value == 'person') {
+    enterPerson();
+  } else if (statusChecker.value == 'unit') {
+    enterUnit();
+  } else if (statusChecker.value == 'table') {
+    enterTable();
+  } else {
+  }
+  // emit('confirmDia', '弹窗内容事件处理完毕，信息传给父组件。');
+};
+
+const enterPerson = (): void => {
+  qtClient.exportWordHuman('711200013');
+
+  //  qtClient.exportWordTitle('711200145',123,2015-12-01);
+  // emit('confirmDia', '弹窗内容事件处理完毕，信息传给父组件。');
+};
+const enterUnit = (): void => {
+  qtClient.exportWordTable('711200013');
+  // emit('confirmDia', '弹窗内容事件处理完毕，信息传给父组件。');
+};
+const enterTable = (): void => {
+  let tempArr = [];
+  console.log(statsTable.tableData);
+  statsTable.tableData.forEach((item) => {
+    tempArr.push(item.ZBNM);
+  });
+  qtClient.queryList('711200010', tempArr.toString());
+  // emit('confirmDia', '弹窗内容事件处理完毕，信息传给父组件。');
+};
+const handleSelectionChange = (val: any) => {
+  statusChecker.value = 'table';
+  statsTable.tableData = val;
+};
+onMounted(() => {
+  qtClient.queryEquipmentTypeList('711200010');
+  qtClient.queryEquipmentTypeListRes.connect(function (jsonStr) {
+    const data = JSON.parse(jsonStr);
+    console.log('dytt', data.equipment);
+    state.tableData = data.equipment;
+  });
+  qtClient.exportWordTableRes.connect(function (ok: any) {
+    if (ok) {
+      ElMessage({
+        message: '根据单位统计装备类型表完成',
+        type: 'success',
+      });
+    }
+  });
+  qtClient.exportWordHumanRes.connect(function (ok: any) {
+    console.log('人员统计', ok);
+    if (ok) {
+      ElMessage({
+        message: '人员统计表处理完成',
+        type: 'success',
+      });
+    }
+  });
+
+  qtClient.queryListRes.connect(function (jsonStr) {
+    // alert(jsonStr);
+    console.log(jsonStr);
+  });
+});
 // vue3中规定，使用了 <script setup> 的组件是默认私有的：
 // 一个父组件无法访问到一个使用了 <script setup> 的子组件中的任何东西，除非子组件在其中通过 defineExpose 宏显式暴露
 defineExpose({
@@ -97,7 +158,7 @@ defineExpose({
       <el-tab-pane label="综合文档" name="first">
         <div>
           <div style="margin: 0 10px">
-            <el-checkbox v-model="titleCheck" label="封面" size="large" />
+            <!-- <el-checkbox v-model="titleCheck" label="封面" size="large" /> -->
             <div
               style="
                 display: flex;
@@ -120,7 +181,7 @@ defineExpose({
               <el-date-picker style="width: 450px" v-model="dateInput" type="date" />
             </div>
           </div>
-          <div style="margin: 0 10px">
+          <!-- <div style="margin: 0 10px">
             <el-checkbox v-model="catalogCheck" label="编目" size="large" />
             <div
               style="
@@ -185,27 +246,31 @@ defineExpose({
                 />
               </el-select>
             </div>
-          </div>
+          </div>-->
         </div>
       </el-tab-pane>
       <el-tab-pane label="统计表" name="second">
         <div>
           <div style="margin: 0 10px">
             <div>
-              <el-checkbox v-model="personStatusCheck" label="人员统计" size="large" />
+              <el-radio v-model="statusChecker" label="person" size="large">人员统计</el-radio>
             </div>
             <div>
-              <el-checkbox v-model="equipStatusCheck" label="根据单位统计装备类型" size="large" />
+              <el-radio v-model="statusChecker" label="unit" size="large">根据单位统计装备类型</el-radio>
             </div>
             <div>
-              <el-checkbox v-model="tableCheck" label="根据装备类型统计单位表配置" size="large" />
+              <el-radio v-model="statusChecker" label="table" size="large">根据装备类型统计单位表配置</el-radio>
             </div>
           </div>
-          <el-table :data="tableData" style="width: 100%">
+          <el-table
+            :data="state.tableData"
+            @selection-change="handleSelectionChange"
+            style="width: 100%"
+          >
             <el-table-column type="selection" width="55" />
-            <el-table-column prop="N" label="N" width="180" />
-            <el-table-column prop="equip" label="装备类型" width="180" />
-            <el-table-column prop="ifEquip" label="是否装备" />
+            <el-table-column prop="MC" label="MC" width="180" />
+            <!-- <el-table-column prop="equip" label="装备类型" width="180" />
+            <el-table-column prop="ifEquip" label="是否装备" />-->
           </el-table>
         </div>
       </el-tab-pane>

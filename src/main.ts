@@ -21,6 +21,7 @@ console.log(qtClient, "qtClient");
 // console.log(qtClient, 333333333333);
 const pinia = createPinia();
 const app = createApp(App);
+
 // Object.keys(Icons).forEach((key) => {
 //     app.component(key, Icons[key]);
 // });
