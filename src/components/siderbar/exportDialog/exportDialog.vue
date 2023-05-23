@@ -65,6 +65,7 @@ const confirmDia = (): void => {
   } else {
     confirmStats();
   }
+  emit('confirmDia', '弹窗内容事件处理完毕，信息传给父组件。');
 };
 
 const confirmDocs = (): void => {
@@ -194,7 +195,7 @@ defineExpose({
                 style="width: 450px"
                 v-model="dateInput"
                 type="date"
-                format="YYYY/MM/DD"
+                format="YYYY-MM-DD"
                 value-format="YYYY-MM-DD"
               />
             </div>
