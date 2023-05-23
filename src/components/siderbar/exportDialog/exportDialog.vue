@@ -45,7 +45,6 @@ const levelsOptions = [
 const state = reactive({ tableData: [] });
 const statsTable = reactive({ tableData: [] });
 
-
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event);
 };
@@ -69,7 +68,16 @@ const confirmDia = (): void => {
 };
 
 const confirmDocs = (): void => {
-  alert(1);
+  // alert(1);
+  console.log(titleInput.value);
+  console.log(dateInput.value);
+  if (titleInput.value == '' || dateInput.value == '') {
+    ElMessage({
+      message: '标题或日期不能为空',
+      type: 'warning',
+    });
+  }
+  qtClient.exportWordTitle('711200145', titleInput.value, dateInput.value);
   // emit('confirmDia', '弹窗内容事件处理完毕，信息传给父组件。');
 };
 const confirmStats = (): void => {
@@ -137,6 +145,10 @@ onMounted(() => {
     // alert(jsonStr);
     console.log(jsonStr);
   });
+
+  qtClient.exportWordTitleRes.connect(function (jsonStr) {
+    console.log(jsonStr);
+  });
 });
 // vue3中规定，使用了 <script setup> 的组件是默认私有的：
 // 一个父组件无法访问到一个使用了 <script setup> 的子组件中的任何东西，除非子组件在其中通过 defineExpose 宏显式暴露
@@ -178,7 +190,13 @@ defineExpose({
               "
             >
               <div style="width: 88px">日期：</div>
-              <el-date-picker style="width: 450px" v-model="dateInput" type="date" />
+              <el-date-picker
+                style="width: 450px"
+                v-model="dateInput"
+                type="date"
+                format="YYYY/MM/DD"
+                value-format="YYYY-MM-DD"
+              />
             </div>
           </div>
           <!-- <div style="margin: 0 10px">
